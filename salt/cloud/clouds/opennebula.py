@@ -902,6 +902,10 @@ def create(vm_):
         )
         return False
 
+    fqdn = vm_.get('fqdn_base')
+    if fqdn is not None:
+        fqdn = '{0}.{1}'.format(vm_['name'], fdqn)
+
     def __query_node_data(vm_name):
         node_data = show_instance(vm_name, call='action')
         if not node_data:
@@ -951,7 +955,10 @@ def create(vm_):
 
     vm_['username'] = ssh_username
     vm_['key_filename'] = key_filename
-    vm_['ssh_host'] = private_ip
+    if fqdn:
+        vm_['ssh_host'] = fqdn
+    else:
+        vm_['ssh_host'] = private_ip
 
     ret = salt.utils.cloud.bootstrap(vm_, __opts__)
 
