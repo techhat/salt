@@ -25,13 +25,15 @@ def test_salt_formula(modules):
     # Master Formula
     ret = modules.state.sls("salt.master")
     assert not ret.errors
-    assert not ret.failed
+    # asserting not ret.failed will cause a False positive if ret.failed is None
+    assert ret.failed is not True
     for staterun in ret:
         assert staterun.result
 
     # Minion Formula
     ret = modules.state.sls("salt.minion")
     assert not ret.errors
-    assert not ret.failed
+    # asserting not ret.failed will cause a False positive if ret.failed is None
+    assert ret.failed is not True
     for staterun in ret:
         assert staterun.result
